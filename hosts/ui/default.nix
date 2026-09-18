@@ -1,10 +1,6 @@
 { pkgs, ... }:
 
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
-
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
   hardware = {
@@ -15,6 +11,10 @@
       enable32Bit = true;
     };
   };
+
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
   networking.hostName = "ui";
 

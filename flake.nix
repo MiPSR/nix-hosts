@@ -1,55 +1,27 @@
 {
-  description = "ui host config";
+  description = "blablabla wip wip wip blablabla mec si tu lis ça tu es fou";
 
-  outputs = { self }:
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
+
+  outputs =
+    { self, nixpkgs }:
+    let
+      system = "x86_64-linux";
+
+      hostDirs = nixpkgs.lib.filterAttrs
+        (name: type: type == "directory" && !nixpkgs.lib.hasPrefix "." name)
+        (builtins.readDir ./hosts);
+
+      mkHost = name: nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [ ./hosts/${name} ];
+      };
+    in
     {
-      host = { pkgs, ... }:
-        {
-          boot.kernelPackages = pkgs.linuxPackages_zen;
+      nixosConfigurations = nixpkgs.lib.mapAttrs (name: _: mkHost name) hostDirs;
 
-          hardware = {
-            alsa.enablePersistence = true;
-            amdgpu.opencl.enable = true;
-            graphics = {
-              enable = true;
-              enable32Bit = true;
-            };
-          };
-
-          networking.hostName = "ui";
-
-          services.power-profiles-daemon.enable = true;
-
-          system.stateVersion = "26.05";
-
-          users.users.m.packages = with pkgs; [
-            darktable
-            (discord.override { withVencord = true; })
-            gamescope
-            git
-            google-chrome
-            heroic
-            interlude
-            jdk
-            kdePackages.elisa
-            kdePackages.falkon
-            kdePackages.kaddressbook
-            kdePackages.kate
-            kdePackages.kclock
-            kdePackages.kdepim-addons
-            kdePackages.kmail
-            kdePackages.neochat
-            krita
-            libreoffice-qt
-            librewolf
-            mpv
-            openutau
-            osu-lazer-bin
-            pixelorama
-            prismlauncher
-            protonup-rs
-            steam
-          ];
-        };
+      nixosModules = nixpkgs.lib.mapAttrs (name: _: ./hosts/${name}) hostDirs;
     };
 }
