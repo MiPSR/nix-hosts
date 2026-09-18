@@ -38,7 +38,6 @@
     kdePackages.kclock
     kdePackages.kdepim-addons
     kdePackages.kmail
-    kdePackages.neochat
     krita
     libreoffice-qt
     librewolf
