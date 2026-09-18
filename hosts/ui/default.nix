@@ -48,5 +48,6 @@
     prismlauncher
     protonup-rs
     steam
+    stoat-desktop
   ];
 }
